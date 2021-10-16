@@ -1,0 +1,112 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Help.gd" type="Script" id=1]
+[ext_resource path="res://Grid/Grid.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Piece/PieceMenu.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Panel.gd" type="Script" id=4]
+[ext_resource path="res://Presets.gd" type="Script" id=5]
+
+[sub_resource type="DynamicFontData" id=1]
+font_path = "res://assets/fonts/DejaVuSans.ttf"
+
+[sub_resource type="DynamicFont" id=2]
+size = 24
+font_data = SubResource( 1 )
+
+[sub_resource type="Theme" id=3]
+default_font = SubResource( 2 )
+
+[node name="Main" type="Node"]
+
+[node name="Panel" type="HSplitContainer" parent="."]
+margin_right = 1400.0
+margin_bottom = 900.0
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+Piece = ExtResource( 3 )
+
+[node name="GridCenter" type="CenterContainer" parent="Panel"]
+margin_bottom = 900.0
+
+[node name="Grid" parent="Panel/GridCenter" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 450.0
+margin_bottom = 450.0
+columns = 6
+tile_size = 60.0
+
+[node name="PiecesMenu" type="VSplitContainer" parent="Panel"]
+margin_left = 12.0
+margin_right = 1400.0
+margin_bottom = 900.0
+
+[node name="Pieces" type="GridContainer" parent="Panel/PiecesMenu"]
+margin_right = 1388.0
+columns = 3
+
+[node name="DeletePieceCenter" type="CenterContainer" parent="Panel/PiecesMenu"]
+margin_top = 12.0
+margin_right = 1388.0
+margin_bottom = 900.0
+
+[node name="DeletePiece" type="Button" parent="Panel/PiecesMenu/DeletePieceCenter"]
+margin_left = 589.0
+margin_top = 426.0
+margin_right = 798.0
+margin_bottom = 461.0
+custom_fonts/font = SubResource( 2 )
+text = "SUPPRIME PIÈCE"
+
+[node name="HelpZIndex" type="CanvasLayer" parent="."]
+__meta__ = {
+"_editor_description_": "This is a 'hack' to put the popup in front of everything else."
+}
+
+[node name="Help" type="Button" parent="HelpZIndex"]
+margin_right = 60.0
+margin_bottom = 31.0
+custom_fonts/font = SubResource( 2 )
+text = "Aide"
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Popup" type="AcceptDialog" parent="HelpZIndex/Help"]
+margin_right = 832.002
+margin_bottom = 164.0
+theme = SubResource( 3 )
+popup_exclusive = true
+window_title = "Aide"
+dialog_text = "- Prend les pièces et place-les sur la grille.
+- Appuie sur 'R' pour tourner une pièce.
+- Appuie sur 'S' pour faire le symétrique par rapport à l'axe vertical.
+- Pour supprimer une pièce, place-la dans la boîte \"SUPPRIME PIÈCE\"."
+
+[node name="PresetsZIndex" type="CanvasLayer" parent="."]
+
+[node name="Presets" type="Button" parent="PresetsZIndex"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -113.0
+margin_bottom = 35.0
+custom_fonts/font = SubResource( 2 )
+text = "Modèles"
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PresetsMenu" type="PopupMenu" parent="PresetsZIndex/Presets"]
+margin_right = 20.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 2 )
+
+[connection signal="pressed" from="Panel/PiecesMenu/DeletePieceCenter/DeletePiece" to="Panel" method="_on_DeletePiece_pressed"]
+[connection signal="pressed" from="HelpZIndex/Help" to="HelpZIndex/Help" method="on_button_pressed"]
+[connection signal="preset_selected" from="PresetsZIndex/Presets" to="Panel" method="_on_Presets_preset_selected"]
+[connection signal="pressed" from="PresetsZIndex/Presets" to="PresetsZIndex/Presets" method="_on_Presets_pressed"]
+[connection signal="index_pressed" from="PresetsZIndex/Presets/PresetsMenu" to="PresetsZIndex/Presets" method="_on_PresetsMenu_index_pressed"]
